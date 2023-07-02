@@ -1,4 +1,4 @@
-Noteworthy differences from Python
+# Noteworthy differences from Python
 
 - Julia's for, if, while, etc. blocks are terminated by the end keyword. Indentation level is not significant as it is in Python. Unlike Python, Julia has no pass keyword.
 - Strings are denoted by double quotation marks ("text") in Julia (with three double quotation marks for multi-line strings), whereas in Python they can be denoted either by single ('text') or double quotation marks ("text"). Single quotation marks are used for characters in Julia ('c').

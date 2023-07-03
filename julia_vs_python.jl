@@ -109,6 +109,150 @@ function diff_11_14_overfow_sqrt_exp_nothing()
     @assert isnothing(a)
 end
 
+function diff_15_element_wise_product()
+    A = reshape(collect(Int, 1:4), (2, 2))
+    B = reshape(collect(Int, [10, 20, 30, 40]), (2, 2))
+    @assert A == [1 3; 2 4]
+    @assert B == [10 30; 20 40]
+    @assert A * B == [70 150; 100 220]
+    @assert A .* B == [10 90; 40 160]
+end
+
+function diff_16_adjoint_operator()
+    array = reshape(collect(Int, 1:25), (5, 5))
+    array_adj = [1 2 3 4 5; 6 7 8 9 10; 11 12 13 14 15; 16 17 18 19 20; 21 22 23 24 25]
+    @assert array' == array_adj
+end
+
+function diff_17_multiple_dispatch()
+    function func1(a::Int, b::Int)
+        return a + b
+    end
+
+    function func1(a::Int, b::Float64)
+        return a * b
+    end
+
+    @assert func1(1, 2) == 3
+    @assert func1(1, 2.0) == 2.0
+
+end
+
+@kwdef mutable struct IdentityInfo
+    name::String
+    age::Int
+end
+
+function change_name!(person::IdentityInfo, name::String)
+    person.name = name
+end
+
+function change_age!(person::IdentityInfo, age::Int)
+    if person.age == age
+        println("Same age, noting to do!")
+    else
+        person.age = age
+    end
+end
+
+function diff_18_19_struct()
+
+    person1 = IdentityInfo(name="YingXing", age=29)
+    person2 = IdentityInfo("John", 28)
+
+    persons = [person1, person2]
+
+    for p in persons
+        println("Name: $(p.name); Age: $(p.age)")
+    end
+
+    person1.age = 18
+
+    for p in persons
+        println("Name: $(p.name); Age: $(p.age)")
+    end
+
+    change_name!(person2, "Bob")
+    change_age!(person1, 18)
+
+    for p in persons
+        println("Name: $(p.name); Age: $(p.age)")
+    end
+end
+
+function diff_20_ternary_operator()
+    for x in range(1, 3)
+        @assert (x > 0 ? 1 : -1) == 1
+    end
+    for x in range(-3, 0)
+        @assert (x > 0 ? 1 : -1) == -1
+    end
+end
+
+macro mymacro(expr)
+    quote
+        println("Received expression: ", $(string(expr)), " = ", $(esc(expr)) + 1)
+    end
+end
+
+function diff_21_macro_usage()
+    x = 4
+    @mymacro(x * 2)
+end
+
+function diff_22_round()
+    a = 3.7
+    @assert floor(Int, 3.7) == 3 == Int(floor(3.7))
+    @assert round(3.7) == 4
+    @assert parse(Float64, "3.7") == 3.7
+end
+
+function diff_23_if_false()
+
+    a = "hello"
+    empty_string = ""
+
+    if !isempty(a)
+        println(""""$a" is not empty!""")
+    end
+
+    if isempty(empty_string)
+        println(""" "$empty_string" is empty!""")
+    end
+
+end
+
+function diff_24_new_scope()
+    a = 10
+    println("a = $a")
+    println("Enter for loop...")
+    for a in range(1, 5)
+        println("a = $a")
+    end
+    println("Exit for loop...")
+    println(a) # In Python, here a = 4
+    @assert a == 10
+
+end
+
+function diff_25_try_catch_finally()
+    a = 1
+    b = 0
+
+    try
+        c = a / b
+        println(c)
+        println(typeof(c))
+        d = div(a, b)
+    catch e
+        if isa(e, DivideError)
+            print("I got a divide error")
+        end
+    finally
+        println("All is good!")
+    end
+end
+
 
 diff_01_block()
 diff_02_strings()
@@ -121,3 +265,13 @@ diff_08_func_arguments()
 diff_09_func_kwargs(name="YingXing", age=29)
 diff_10_percent_symbol()
 diff_11_14_overfow_sqrt_exp_nothing()
+diff_15_element_wise_product()
+diff_16_adjoint_operator()
+diff_17_multiple_dispatch()
+diff_18_19_struct()
+diff_20_ternary_operator()
+diff_21_macro_usage()
+diff_22_round()
+diff_23_if_false()
+diff_24_new_scope()
+diff_25_try_catch_finally()

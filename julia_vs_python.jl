@@ -241,13 +241,11 @@ function diff_25_try_catch_finally()
 
     try
         c = a / b
-        println(c)
-        println(typeof(c))
+        @assert c == Inf
+        @assert isa(c, Int)
         d = div(a, b)
     catch e
-        if isa(e, DivideError)
-            print("I got a divide error")
-        end
+        @assert isa(e, DivideError)
     finally
         println("All is good!")
     end
